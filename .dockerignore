@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+venv/
+env/
+.agentcore/
+cdk.out/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+*.md
+tests/
+Dockerfile
+.env
