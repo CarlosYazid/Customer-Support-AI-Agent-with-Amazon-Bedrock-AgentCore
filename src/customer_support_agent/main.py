@@ -220,13 +220,13 @@ def calculate_loyalty_discount(
     code = f"""
 import json, math
 
-earn_rates = {{"standard": 1, "device": 2, "fresh": 5}}
-tier_rates = {{"Silver": 0.00, "Gold": 0.10, "Platinum": 0.15}}
+earn_rates = {{'standard': 1, 'device': 2, 'fresh': 5}}
+tier_rates = {{'Silver': 0.00, 'Gold': 0.10, 'Platinum': 0.15}}
 
 pts = {loyalty_points}
-tier = "{tier}"
+tier = '{tier}'
 total = {order_total}
-cat = "{product_category}"
+cat = '{product_category}'
 
 max_pts_allowed = math.floor((total * 0.50) * 100)
 pts_to_use = min(pts - (pts % 500), max_pts_allowed)
@@ -242,15 +242,15 @@ pts_earned = math.floor(final_total * earn_rates.get(cat, 1))
 remaining_points = pts - pts_to_use + pts_earned
 
 result = {{
-    "original_total": total,
-    "points_redeemed": pts_to_use,
-    "points_discount": round(pts_discount, 2),
-    "tier_rate": float(tier_rate)
-    "tier_discount": round(tier_discount, 2),
-    "final_total": final_total,
-    "total_savings": total_savings,
-    "points_earned": pts_earned,
-    "remaining_points": remaining_points
+    'original_total': total,
+    'points_redeemed': pts_to_use,
+    'points_discount': round(pts_discount, 2),
+    'tier_discount_pct': float(tier_rate)
+    'tier_discount': round(tier_discount, 2),
+    'final_total': final_total,
+    'total_savings': total_savings,
+    'points_earned': pts_earned,
+    'remaining_points': remaining_points
 }}
 
 print(json.dumps(result))
