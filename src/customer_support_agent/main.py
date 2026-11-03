@@ -245,6 +245,7 @@ result = {{
     "original_total": total,
     "points_redeemed": pts_to_use,
     "points_discount": round(pts_discount, 2),
+    "tier_rate": float(tier_rate)
     "tier_discount": round(tier_discount, 2),
     "final_total": final_total,
     "total_savings": total_savings,
@@ -314,12 +315,26 @@ async def invoke(payload, context=None):
         tools = []
 
         if GATEWAY_URL and GATEWAY_URL != "<gateway_url>":
+            
             try:
+
                 async with streamable_http_client(GATEWAY_URL) as (read_stream, write_stream):
-                    mcp_client = MCPClient(read_stream, write_stream)
-                    await mcp_client.initialize()
-                    gateway_tools = await mcp_client.get_tools()
-                    tools.extend(gateway_tools)
+                    
+                    gateway_client = MCPClient(read_stream, write_stream)
+
+                    async with gateway_client:
+                        
+                        gateway_tools = await gateway_client.get_tools()
+                        tools.extend(gateway_tools)
+
+                        logger.info("Gateway connected successfully. Loaded %d tools.", len(gateway_tools))
+
+            except TimeoutError:
+                logger.exception("Gateway tool loading timed out")
+
+            except ConnectionError:
+                logger.exception("Gateway connection failed")
+
             except Exception as e:
                 logger.warning(f"Could not connect to Gateway MCP tools: {e}")
 
